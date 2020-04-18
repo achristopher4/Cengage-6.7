@@ -25,7 +25,8 @@ def openDirectory(pathname):
         if not file.startswith('.DS'):
             if os.path.isfile(openPath):
                 contents = open(openPath, 'r')
-                print('File Name:', str(pathname) + str(file), contents.read())
+                print('File Name:', finalPrint(pathname) + '.' + str(file))
+                print(contents.read())
                 contents.close()
             else:
                 openDir = openPath + '/'
@@ -58,9 +59,31 @@ def makeReadable(pathname):
     final = ''
     final = final.join(reconstructionList)
     return final
-    
 
-        
-
-
-           
+def finalPrint(pathname):
+    seperate = pathname.split('/')
+    removePeriod = []
+    for i in range(len(seperate)):
+        find = seperate[i]
+        if find.startswith('.'):
+            new = find.replace('.','',1)
+            removePeriod.append(new)
+        elif find != '':
+            new = find
+            removePeriod.append(new)
+    lastValue = removePeriod[-1]
+    reconstructionList = []
+    for i in range(len(removePeriod)):
+        determine = removePeriod[i]
+        if determine == lastValue:
+            if os.path.isfile(determine):
+                reconstructionList.append('/'+ determine)
+            elif os.path.isfile(removePeriod[i-1] + '/' + determine):
+                reconstructionList.append('/'+ determine)
+            else:
+                reconstructionList.append('/'+ '.' + determine + '/')
+        else:
+            reconstructionList.append('/'+determine)
+    final = ''
+    final = final.join(reconstructionList)
+    return final
